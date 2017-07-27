@@ -1094,6 +1094,19 @@ int ViewManager::currentSession()
     return -1;
 }
 
+void ViewManager::setCurrentSession(int sessionId)
+{
+    QHash<TerminalDisplay *, Session *>::iterator i;
+    for (i = this->_sessionMap.begin(); i != this->_sessionMap.end(); ++i) {
+        if (i.value()->sessionId() == sessionId) {
+            ViewContainer *container = _viewSplitter->activeContainer();
+            if (container != nullptr) {
+                container->setActiveView(i.key());
+            }
+        }
+    }
+}
+
 int ViewManager::newSession()
 {
     Profile::Ptr profile = ProfileManager::instance()->defaultProfile();
