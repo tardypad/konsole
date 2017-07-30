@@ -328,6 +328,9 @@ private Q_SLOTS:
     // called when "Switch to last tab" shortcut is activated
     void lastView();
 
+    // called when "Switch to alternate tab" shortcut is activated
+    void alternateView();
+
     // called when "Next View Container" shortcut is activated
     void nextContainer();
 

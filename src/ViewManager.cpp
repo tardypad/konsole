@@ -139,6 +139,8 @@ void ViewManager::setupActions()
     QAction *previousViewAction = new QAction(i18nc("@action Shortcut entry", "Previous Tab"), this);
     QAction *lastViewAction = new QAction(i18nc("@action Shortcut entry",
                                                 "Switch to Last Tab"), this);
+    QAction *alternateViewAction = new QAction(i18nc("@action Shortcut entry",
+                                                     "Switch to Alternate Tab"), this);
     QAction *nextContainerAction = new QAction(i18nc("@action Shortcut entry",
                                                      "Next View Container"), this);
 
@@ -223,6 +225,7 @@ void ViewManager::setupActions()
     collection->addAction(QStringLiteral("next-view"), nextViewAction);
     collection->addAction(QStringLiteral("previous-view"), previousViewAction);
     collection->addAction(QStringLiteral("last-tab"), lastViewAction);
+    collection->addAction(QStringLiteral("alternate-tab"), alternateViewAction);
     collection->addAction(QStringLiteral("next-container"), nextContainerAction);
     collection->addAction(QStringLiteral("move-view-left"), moveViewLeftAction);
     collection->addAction(QStringLiteral("move-view-right"), moveViewRightAction);
@@ -281,6 +284,9 @@ void ViewManager::setupActions()
 
     connect(lastViewAction, &QAction::triggered, this, &Konsole::ViewManager::lastView);
     _viewSplitter->addAction(lastViewAction);
+
+    connect(alternateViewAction, &QAction::triggered, this, &Konsole::ViewManager::alternateView);
+    _viewSplitter->addAction(alternateViewAction);
 }
 
 void ViewManager::switchToView(int index)
@@ -359,6 +365,15 @@ void ViewManager::lastView()
     Q_ASSERT(container);
 
     container->activateLastView();
+}
+
+void ViewManager::alternateView()
+{
+    ViewContainer *container = _viewSplitter->activeContainer();
+
+    Q_ASSERT(container);
+
+    container->activateAlternateView();
 }
 
 void ViewManager::detachActiveView()
@@ -771,6 +786,11 @@ void ViewManager::setNavigationMethod(NavigationMethod method)
     }
 
     action = collection->action(QStringLiteral("last-tab"));
+    if (action != nullptr) {
+        action->setEnabled(enable);
+    }
+
+    action = collection->action(QStringLiteral("alternate-tab"));
     if (action != nullptr) {
         action->setEnabled(enable);
     }

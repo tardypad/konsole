@@ -211,6 +211,9 @@ public:
     /** Changes the active view to the last view */
     void activateLastView();
 
+    /** Changes the active view to the alternate view */
+    void activateAlternateView();
+
     /**
      * This enum describes the directions
      * in which views can be re-arranged within the container
@@ -345,6 +348,9 @@ protected:
      * @param toIndex New index for the widget
      */
     virtual void moveViewWidget(int fromIndex, int toIndex);
+
+    /** Holds the alternate tab */
+    QWidget *_alternateView;
 
 private Q_SLOTS:
     void viewDestroyed(QObject *view);

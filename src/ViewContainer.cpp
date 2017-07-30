@@ -52,6 +52,7 @@ using namespace Konsole;
 
 ViewContainer::ViewContainer(NavigationPosition position, QObject *parent) :
     QObject(parent),
+    _alternateView(nullptr),
     _navigationVisibility(AlwaysShowNavigation),
     _navigationPosition(position),
     _searchBar(nullptr)
@@ -229,6 +230,13 @@ void ViewContainer::activateNextView()
 void ViewContainer::activateLastView()
 {
     setActiveView(_views.at(_views.count() - 1));
+}
+
+void ViewContainer::activateAlternateView()
+{
+    if (_alternateView != nullptr) {
+        setActiveView(_alternateView);
+    }
 }
 
 void ViewContainer::activatePreviousView()
@@ -645,6 +653,8 @@ void TabbedViewContainer::moveViewWidget(int fromIndex, int toIndex)
 
 void TabbedViewContainer::currentTabChanged(int index)
 {
+    _alternateView = activeView();
+
     _stackWidget->setCurrentIndex(index);
     if (_stackWidget->widget(index) != nullptr) {
         emit activeViewChanged(_stackWidget->widget(index));
@@ -679,7 +689,7 @@ void TabbedViewContainer::setActiveView(QWidget *view)
 
     Q_ASSERT(index != -1);
 
-    _stackWidget->setCurrentWidget(view);
+    // let the tab bar be the unique item setting the active view
     _tabBar->setCurrentIndex(index);
 }
 
@@ -809,6 +819,8 @@ QWidget *StackedViewContainer::activeView() const
 
 void StackedViewContainer::setActiveView(QWidget *view)
 {
+    _alternateView = activeView();
+
     _stackWidget->setCurrentWidget(view);
 }
 
